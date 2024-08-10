@@ -22,7 +22,7 @@ impl PageTable {
             frames: vec![frame],
         }
     }
-    
+
     /// Temporarily used to get arguments from user space.
     pub fn from_token(satp: usize) -> Self {
         Self {
