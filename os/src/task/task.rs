@@ -1,7 +1,8 @@
 //! Types related to task management
 use super::TaskContext;
 use crate::config::{kernel_stack_position, TRAP_CONTEXT};
-use crate::mm::{MapPermission, MemorySet, PhysPageNum, VirtAddr, KERNEL_SPACE};
+use crate::mm::{MapPermission, MemorySet, PhysPageNum, KERNEL_SPACE};
+use crate::page_table::VirtAddr;
 use crate::trap::{trap_handler, TrapContext};
 
 /// task control block structure

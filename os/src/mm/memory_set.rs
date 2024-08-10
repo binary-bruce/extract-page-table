@@ -1,10 +1,17 @@
 //! Implementation of [`MapArea`] and [`MemorySet`].
 
+use super::PageTable;
+use super::PhysPageNum;
 use super::{frame_alloc, FrameTracker};
-use super::{PTEFlags, PageTable, PageTableEntry};
-use super::{PhysAddr, PhysPageNum, VirtAddr, VirtPageNum};
-use super::{StepByOne, VPNRange};
-use crate::config::{MEMORY_END, MMIO, PAGE_SIZE, TRAMPOLINE, TRAP_CONTEXT, USER_STACK_SIZE};
+use crate::config::{MEMORY_END, MMIO, TRAMPOLINE, TRAP_CONTEXT, USER_STACK_SIZE};
+
+use crate::page_table::PageTableEntry;
+use crate::page_table::StepByOne;
+use crate::page_table::VPNRange;
+use crate::page_table::VirtAddr;
+use crate::page_table::VirtPageNum;
+use crate::page_table::PAGE_SIZE;
+use crate::page_table::{PTEFlags, PhysAddr};
 use crate::sync::UPSafeCell;
 use alloc::collections::BTreeMap;
 use alloc::sync::Arc;
