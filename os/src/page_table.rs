@@ -12,6 +12,7 @@ pub use addr::vpn::*;
 pub use config::*;
 use frame::frame_allocator::FRAME_ALLOCATOR;
 pub use frame::frame_allocator::*;
+pub use frame::frame_tracker::FrameTracker;
 pub use page_table_entry::*;
 pub use pte_flags::PTEFlags;
 
