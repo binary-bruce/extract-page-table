@@ -11,10 +11,10 @@ extern crate alloc;
 
 pub use crate::page_table_entry::PageTableEntry;
 pub use crate::pte_flags::PTEFlags;
-use addr::PhysAddr;
+pub use addr::*;
+pub use config::*;
+pub use frame::*;
 pub use page_table::*;
-
-use frame::FRAME_ALLOCATOR;
 
 pub fn init_frame_allocator(from: usize, to: usize) {
     FRAME_ALLOCATOR
