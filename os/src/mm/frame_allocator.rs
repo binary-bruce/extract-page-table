@@ -1,8 +1,8 @@
 //! Implementation of [`FrameAllocator`] which
 //! controls all the frames in the operating system.
 
-use super::{PhysAddr, PhysPageNum};
-use crate::config::MEMORY_END;
+use super::PhysPageNum;
+use crate::{config::MEMORY_END, page_table::PhysAddr};
 use crate::sync::UPSafeCell;
 use alloc::vec::Vec;
 use core::fmt::{self, Debug, Formatter};

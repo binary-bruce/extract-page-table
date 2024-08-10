@@ -12,7 +12,7 @@ mod heap_allocator;
 mod memory_set;
 mod page_table_util;
 
-pub use address::{PhysAddr, PhysPageNum, VirtAddr, VirtPageNum};
+pub use address::{PhysPageNum, VirtAddr, VirtPageNum};
 use address::{StepByOne, VPNRange};
 pub use frame_allocator::{frame_alloc, FrameTracker};
 pub use memory_set::remap_test;

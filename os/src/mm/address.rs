@@ -1,7 +1,7 @@
 //! Implementation of physical and virtual address and page number.
 
 use super::PageTableEntry;
-use crate::config::{PAGE_SIZE, PAGE_SIZE_BITS};
+use crate::{config::{PAGE_SIZE, PAGE_SIZE_BITS}, page_table::PhysAddr};
 use core::fmt::{self, Debug, Formatter};
 
 /// physical address
@@ -9,10 +9,6 @@ const PA_WIDTH_SV39: usize = 56;
 const VA_WIDTH_SV39: usize = 39;
 const PPN_WIDTH_SV39: usize = PA_WIDTH_SV39 - PAGE_SIZE_BITS;
 const VPN_WIDTH_SV39: usize = VA_WIDTH_SV39 - PAGE_SIZE_BITS;
-
-/// Definitions
-#[derive(Copy, Clone, Ord, PartialOrd, Eq, PartialEq)]
-pub struct PhysAddr(pub usize);
 
 /// virtual address
 #[derive(Copy, Clone, Ord, PartialOrd, Eq, PartialEq)]
