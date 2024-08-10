@@ -4,6 +4,7 @@ mod addr;
 mod config;
 mod page_table_entry;
 mod pte_flags;
+mod frame;
 
 extern crate alloc;
 
