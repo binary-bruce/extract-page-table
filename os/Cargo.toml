@@ -14,7 +14,7 @@ bitflags = "1.2.1"
 xmas-elf = "0.7.0"
 log = "0.4"
 sbi-rt = { version = "0.0.2", features = ["legacy"] }
-page_table = { path = "../page_table" }
+page_table = { git = "https://github.com/binary-bruce/naive-page-table" }
 
 [profile.release]
 debug = true
