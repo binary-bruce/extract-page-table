@@ -2,6 +2,7 @@ use crate::page_table::PhysPageNum;
 use alloc::vec::Vec;
 
 use super::frame_allocator_trait::FrameAllocator;
+
 /// an implementation for frame allocator
 pub struct StackFrameAllocator {
     current: usize,
