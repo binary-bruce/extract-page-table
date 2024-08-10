@@ -8,15 +8,12 @@
 
 mod heap_allocator;
 mod memory_set;
-mod page_table_util;
 
 use crate::board::MEMORY_END;
 use crate::page_table;
 pub use crate::page_table::PhysPageNum;
 pub use memory_set::remap_test;
 pub use memory_set::{MapPermission, MemorySet, KERNEL_SPACE};
-pub use page_table_util::translated_byte_buffer;
-use page_table_util::PageTable;
 
 /// initiate heap allocator, frame allocator and kernel space
 pub fn init() {
