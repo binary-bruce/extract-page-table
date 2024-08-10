@@ -6,12 +6,15 @@
 //!
 //! Every task or process has a memory_set to control its virtual memory.
 
-mod heap_allocator;
 mod memory_set;
 
 use crate::board::MEMORY_END;
+use crate::config::KERNEL_HEAP_SIZE;
 pub use memory_set::remap_test;
 pub use memory_set::{MapPermission, MemorySet, KERNEL_SPACE};
+
+/// heap space ([u8; KERNEL_HEAP_SIZE])
+static mut HEAP_SPACE: [u8; KERNEL_HEAP_SIZE] = [0; KERNEL_HEAP_SIZE];
 
 /// initiate heap allocator, frame allocator and kernel space
 pub fn init() {
@@ -19,7 +22,7 @@ pub fn init() {
         fn ekernel();
     }
 
-    heap_allocator::init_heap();
+    heap_allocator::init_heap(unsafe { HEAP_SPACE.as_ptr() } as usize, KERNEL_HEAP_SIZE);
     page_table::init_frame_allocator(ekernel as usize, MEMORY_END);
     KERNEL_SPACE.exclusive_access().activate();
 }
