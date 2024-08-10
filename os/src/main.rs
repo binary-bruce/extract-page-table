@@ -36,6 +36,7 @@ mod config;
 mod lang_items;
 mod loader;
 mod mm;
+mod page_table;
 mod sbi;
 mod sync;
 pub mod syscall;
