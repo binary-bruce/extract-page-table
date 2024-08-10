@@ -1,12 +1,11 @@
-//! Implementation of [`PageTableEntry`] and [`PageTable`].
-
 use crate::page_table::{
-    frame_alloc, FrameTracker, PTEFlags, PageTableEntry, PhysPageNum, StepByOne, VirtAddr,
-    VirtPageNum,
+    frame_alloc, FrameTracker, PTEFlags, PageTableEntry, PhysPageNum, VirtPageNum,
 };
 
 use alloc::vec;
 use alloc::vec::Vec;
+
+use crate::page_table::{StepByOne, VirtAddr};
 
 /// page table structure
 pub struct PageTable {
@@ -23,6 +22,7 @@ impl PageTable {
             frames: vec![frame],
         }
     }
+    
     /// Temporarily used to get arguments from user space.
     pub fn from_token(satp: usize) -> Self {
         Self {
@@ -30,6 +30,7 @@ impl PageTable {
             frames: Vec::new(),
         }
     }
+
     fn find_pte_create(&mut self, vpn: VirtPageNum) -> Option<&mut PageTableEntry> {
         let idxs = vpn.indexes();
         let mut ppn = self.root_ppn;
@@ -49,6 +50,7 @@ impl PageTable {
         }
         result
     }
+
     fn find_pte(&self, vpn: VirtPageNum) -> Option<&mut PageTableEntry> {
         let idxs = vpn.indexes();
         let mut ppn = self.root_ppn;
@@ -66,21 +68,25 @@ impl PageTable {
         }
         result
     }
+
     #[allow(unused)]
     pub fn map(&mut self, vpn: VirtPageNum, ppn: PhysPageNum, flags: PTEFlags) {
         let pte = self.find_pte_create(vpn).unwrap();
         assert!(!pte.is_valid(), "vpn {:?} is mapped before mapping", vpn);
         *pte = PageTableEntry::new(ppn, flags | PTEFlags::V);
     }
+
     #[allow(unused)]
     pub fn unmap(&mut self, vpn: VirtPageNum) {
         let pte = self.find_pte(vpn).unwrap();
         assert!(pte.is_valid(), "vpn {:?} is invalid before unmapping", vpn);
         *pte = PageTableEntry::empty();
     }
+
     pub fn translate(&self, vpn: VirtPageNum) -> Option<PageTableEntry> {
         self.find_pte(vpn).map(|pte| *pte)
     }
+
     pub fn token(&self) -> usize {
         8usize << 60 | self.root_ppn.0
     }
