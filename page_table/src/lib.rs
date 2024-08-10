@@ -2,29 +2,22 @@
 
 mod addr;
 mod config;
+mod frame;
+mod page_table;
 mod page_table_entry;
 mod pte_flags;
-mod frame;
 
 extern crate alloc;
 
 pub use crate::page_table_entry::PageTableEntry;
 pub use crate::pte_flags::PTEFlags;
+use addr::PhysAddr;
+pub use page_table::*;
 
-pub fn add(left: usize, right: usize) -> usize {
-    left + right
-}
+use frame::FRAME_ALLOCATOR;
 
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn it_works() {
-        let result = add(2, 2);
-        assert_eq!(result, 4);
-
-        let a = PTEFlags::V;
-        assert_eq!(PTEFlags::V, a);
-    }
+pub fn init_frame_allocator(from: usize, to: usize) {
+    FRAME_ALLOCATOR
+        .exclusive_access()
+        .init(PhysAddr::from(from).ceil(), PhysAddr::from(to).floor());
 }
