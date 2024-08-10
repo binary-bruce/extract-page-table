@@ -72,17 +72,6 @@ where
             Some(t)
         }
     }
-
-    fn size_hint(&self) -> (usize, Option<usize>) {
-        (0, None)
-    }
-
-    fn count(self) -> usize
-    where
-        Self: Sized,
-    {
-        self.fold(0, |count, _| count + 1)
-    }
 }
 
 /// a simple range structure for virtual page number
