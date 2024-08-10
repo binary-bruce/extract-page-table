@@ -1,23 +1,17 @@
 //! Implementation of [`MapArea`] and [`MemorySet`].
 
-use super::PhysPageNum;
 use crate::config::{MEMORY_END, MMIO, TRAMPOLINE, TRAP_CONTEXT, USER_STACK_SIZE};
 
-use crate::page_table::FrameTracker;
-use crate::page_table::PageTableEntry;
-use crate::page_table::StepByOne;
-use crate::page_table::VPNRange;
-use crate::page_table::VirtAddr;
-use crate::page_table::VirtPageNum;
-use crate::page_table::PAGE_SIZE;
-use crate::page_table::{frame_alloc, PageTable};
-use crate::page_table::{PTEFlags, PhysAddr};
 use crate::sync::UPSafeCell;
 use alloc::collections::BTreeMap;
 use alloc::sync::Arc;
 use alloc::vec::Vec;
 use core::arch::asm;
 use lazy_static::*;
+use page_table::{
+    frame_alloc, FrameTracker, PTEFlags, PageTable, PageTableEntry, PhysAddr, PhysPageNum,
+    StepByOne, VPNRange, VirtAddr, VirtPageNum, PAGE_SIZE,
+};
 use riscv::register::satp;
 
 extern "C" {

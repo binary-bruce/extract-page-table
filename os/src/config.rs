@@ -13,5 +13,6 @@ pub fn kernel_stack_position(app_id: usize) -> (usize, usize) {
     (bottom, top)
 }
 
+use page_table::PAGE_SIZE;
+
 pub use crate::board::{CLOCK_FREQ, MEMORY_END, MMIO};
-use crate::page_table::PAGE_SIZE;

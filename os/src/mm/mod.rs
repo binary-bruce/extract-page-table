@@ -10,8 +10,6 @@ mod heap_allocator;
 mod memory_set;
 
 use crate::board::MEMORY_END;
-use crate::page_table;
-pub use crate::page_table::PhysPageNum;
 pub use memory_set::remap_test;
 pub use memory_set::{MapPermission, MemorySet, KERNEL_SPACE};
 
