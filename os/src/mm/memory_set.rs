@@ -2,9 +2,10 @@
 
 use super::PageTable;
 use super::PhysPageNum;
-use super::{frame_alloc, FrameTracker};
 use crate::config::{MEMORY_END, MMIO, TRAMPOLINE, TRAP_CONTEXT, USER_STACK_SIZE};
 
+use crate::page_table::frame_alloc;
+use crate::page_table::FrameTracker;
 use crate::page_table::PageTableEntry;
 use crate::page_table::StepByOne;
 use crate::page_table::VPNRange;
