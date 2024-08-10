@@ -1,8 +1,10 @@
 //! Implementation of [`PageTableEntry`] and [`PageTable`].
 
-use crate::page_table::{PTEFlags, PageTableEntry, PhysPageNum, StepByOne, VirtAddr, VirtPageNum};
+use crate::page_table::{
+    frame_alloc, FrameTracker, PTEFlags, PageTableEntry, PhysPageNum, StepByOne, VirtAddr,
+    VirtPageNum,
+};
 
-use super::{frame_alloc, FrameTracker};
 use alloc::vec;
 use alloc::vec::Vec;
 

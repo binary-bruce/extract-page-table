@@ -1,7 +1,3 @@
-//! Implementation of [`FrameAllocator`] which
-//! controls all the frames in the operating system.
-
-use crate::page_table::PhysAddr;
 use crate::page_table::PhysPageNum;
 use crate::sync::UPSafeCell;
 use alloc::vec::Vec;
@@ -90,13 +86,6 @@ lazy_static! {
     /// frame allocator instance through lazy_static!
     pub static ref FRAME_ALLOCATOR: UPSafeCell<FrameAllocatorImpl> =
         unsafe { UPSafeCell::new(FrameAllocatorImpl::new()) };
-}
-
-/// initiate the frame allocator using `ekernel` and `MEMORY_END`
-pub fn init_frame_allocator(from: usize, to: usize) {
-    FRAME_ALLOCATOR
-        .exclusive_access()
-        .init(PhysAddr::from(from).ceil(), PhysAddr::from(to).floor());
 }
 
 /// allocate a frame
