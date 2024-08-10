@@ -1,9 +1,9 @@
 //! Implementation of [`FrameAllocator`] which
 //! controls all the frames in the operating system.
 
+use crate::page_table::PhysAddr;
 use crate::page_table::PhysPageNum;
 use crate::sync::UPSafeCell;
-use crate::{config::MEMORY_END, page_table::PhysAddr};
 use alloc::vec::Vec;
 use core::fmt::{self, Debug, Formatter};
 use lazy_static::*;
@@ -93,14 +93,10 @@ lazy_static! {
 }
 
 /// initiate the frame allocator using `ekernel` and `MEMORY_END`
-pub fn init_frame_allocator() {
-    extern "C" {
-        fn ekernel();
-    }
-    FRAME_ALLOCATOR.exclusive_access().init(
-        PhysAddr::from(ekernel as usize).ceil(),
-        PhysAddr::from(MEMORY_END).floor(),
-    );
+pub fn init_frame_allocator(from: usize, to: usize) {
+    FRAME_ALLOCATOR
+        .exclusive_access()
+        .init(PhysAddr::from(from).ceil(), PhysAddr::from(to).floor());
 }
 
 /// allocate a frame

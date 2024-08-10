@@ -11,6 +11,7 @@ mod heap_allocator;
 mod memory_set;
 mod page_table_util;
 
+use crate::board::MEMORY_END;
 pub use crate::page_table::PhysPageNum;
 pub use frame_allocator::{frame_alloc, FrameTracker};
 pub use memory_set::remap_test;
@@ -20,7 +21,11 @@ use page_table_util::PageTable;
 
 /// initiate heap allocator, frame allocator and kernel space
 pub fn init() {
+    extern "C" {
+        fn ekernel();
+    }
+    
     heap_allocator::init_heap();
-    frame_allocator::init_frame_allocator();
+    frame_allocator::init_frame_allocator(ekernel as usize, MEMORY_END);
     KERNEL_SPACE.exclusive_access().activate();
 }
