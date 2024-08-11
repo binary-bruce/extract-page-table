@@ -2,7 +2,6 @@
 
 use crate::config::{MEMORY_END, MMIO, TRAMPOLINE};
 
-use crate::mm::memory_set_builder::MemorySetBuilder;
 use crate::sync::UPSafeCell;
 use alloc::sync::Arc;
 use lazy_static::*;
@@ -43,16 +42,16 @@ fn new_kernel() -> MemorySet {
     let rw = MapPermission::R | MapPermission::W;
     let mut memory_set_builder = MemorySetBuilder::new()
         .map_trampoline(TRAMPOLINE, strampoline as usize)
-        .push_memory_area(stext as usize, etext as usize, rx)
-        .push_memory_area(srodata as usize, erodata as usize, r)
-        .push_memory_area(sdata as usize, edata as usize, rw)
-        .push_memory_area(sbss_with_stack as usize, ebss as usize, rw)
-        .push_memory_area(ekernel as usize, MEMORY_END, rw);
+        .push_identical(stext as usize, etext as usize, rx)
+        .push_identical(srodata as usize, erodata as usize, r)
+        .push_identical(sdata as usize, edata as usize, rw)
+        .push_identical(sbss_with_stack as usize, ebss as usize, rw)
+        .push_identical(ekernel as usize, MEMORY_END, rw);
 
     println!("mapping memory-mapped registers");
     for pair in MMIO {
         memory_set_builder =
-            memory_set_builder.push_memory_area((*pair).0, (*pair).0 + (*pair).1, rw);
+            memory_set_builder.push_identical((*pair).0, (*pair).0 + (*pair).1, rw);
     }
 
     memory_set_builder.build()
