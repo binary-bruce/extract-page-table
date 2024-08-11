@@ -1,11 +1,12 @@
 //! Types related to task management
 use memory_set::*;
 use page_table::{PhysPageNum, VirtAddr};
+use task::TaskStatus;
 
 use super::TaskContext;
 use crate::config::{kernel_stack_position, TRAP_CONTEXT};
 use crate::mm::{from_elf, KERNEL_SPACE};
-use crate::trap::{trap_handler, TrapContext};
+use crate::trap::{trap_handler, trap_return, TrapContext};
 
 /// task control block structure
 pub struct TaskControlBlock {
@@ -43,7 +44,7 @@ impl TaskControlBlock {
         );
         let task_control_block = Self {
             task_status,
-            task_cx: TaskContext::goto_trap_return(kernel_stack_top),
+            task_cx: TaskContext::init(trap_return as usize, kernel_stack_top),
             memory_set,
             trap_cx_ppn,
             base_size: user_sp,
@@ -82,12 +83,4 @@ impl TaskControlBlock {
             None
         }
     }
-}
-
-#[derive(Copy, Clone, PartialEq)]
-/// task status: UnInit, Ready, Running, Exited
-pub enum TaskStatus {
-    Ready,
-    Running,
-    Exited,
 }
