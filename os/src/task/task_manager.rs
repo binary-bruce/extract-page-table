@@ -9,21 +9,16 @@
 //! Be careful when you see `__switch` ASM function in `switch.S`. Control flow around this function
 //! might not be what you expect.
 
-mod context;
-mod switch;
-#[allow(clippy::module_inception)]
-mod task;
-
 use crate::loader::{get_app_data, get_num_app};
 use crate::sbi::shutdown;
 use crate::sync::UPSafeCell;
-use crate::trap::TrapContext;
+use crate::task::new_tcb;
+use ::task::{TaskContext, TaskControlBlock, TaskStatus, TrapContext};
 use alloc::vec::Vec;
 use lazy_static::*;
 use switch::__switch;
-use task::{TaskControlBlock, TaskStatus};
 
-pub use context::TaskContext;
+use super::switch;
 
 /// The task manager, where all the tasks are managed.
 ///
@@ -57,7 +52,7 @@ lazy_static! {
         println!("num_app = {}", num_app);
         let mut tasks: Vec<TaskControlBlock> = Vec::new();
         for i in 0..num_app {
-            tasks.push(TaskControlBlock::new(get_app_data(i), i));
+            tasks.push(new_tcb(get_app_data(i), i));
         }
         TaskManager {
             num_app,

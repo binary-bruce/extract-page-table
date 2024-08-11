@@ -11,7 +11,6 @@
 //! It then calls different functionality based on what exactly the exception
 //! was. For example, timer interrupts trigger task preemption, and syscalls go
 //! to [`syscall()`].
-mod context;
 
 use crate::config::{TRAMPOLINE, TRAP_CONTEXT};
 use crate::syscall::syscall;
@@ -121,5 +120,3 @@ pub fn trap_return() -> ! {
 pub fn trap_from_kernel() -> ! {
     panic!("a trap from kernel!");
 }
-
-pub use context::TrapContext;
