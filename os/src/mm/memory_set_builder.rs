@@ -1,18 +1,19 @@
 use memory_set::{MapArea, MapPermission, MapType, MemorySet};
+use page_table::{PhysAddr, VirtAddr};
 
-pub struct MemorySetBuilder {
+pub(crate) struct MemorySetBuilder {
     memory_set: MemorySet,
 }
 
 impl MemorySetBuilder {
-    pub fn new() -> Self {
+    pub(crate) fn new() -> Self {
         Self {
             memory_set: MemorySet::new_bare(),
         }
     }
 
     /// Identical map type only
-    pub fn push_memory_area(
+    pub(crate) fn push_memory_area(
         mut self,
         start_va: usize,
         end_va: usize,
@@ -26,12 +27,13 @@ impl MemorySetBuilder {
         return self;
     }
 
-    pub fn map_trampoline(mut self, vpn: usize, ppn: usize) -> Self {
-        self.memory_set.map_trampoline(vpn.into(), ppn.into());
+    pub(crate) fn map_trampoline(mut self, va: usize, pa: usize) -> Self {
+        self.memory_set
+            .map_trampoline(VirtAddr::from(va).into(), PhysAddr::from(pa).into());
         self
     }
 
-    pub fn build(self) -> MemorySet {
+    pub(crate) fn build(self) -> MemorySet {
         self.memory_set
     }
 }
