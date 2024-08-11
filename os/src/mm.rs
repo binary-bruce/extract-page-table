@@ -7,7 +7,6 @@
 //! Every task or process has a memory_set to control its virtual memory.
 
 mod kernel_memory_set;
-mod memory_set_builder;
 mod user_memory_set;
 
 use crate::board::MEMORY_END;
