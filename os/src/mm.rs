@@ -6,17 +6,14 @@
 //!
 //! Every task or process has a memory_set to control its virtual memory.
 
-mod init_memory_set;
-mod map_permission;
-mod map_type;
-mod memory_area;
-mod memory_set;
+mod kernel_memory_set;
+mod user_memory_set;
 
 use crate::board::MEMORY_END;
 use crate::config::KERNEL_HEAP_SIZE;
-pub use init_memory_set::KERNEL_SPACE;
-pub use map_permission::MapPermission;
-pub use memory_set::MemorySet;
+pub use kernel_memory_set::KERNEL_SPACE;
+
+pub use user_memory_set::from_elf;
 
 /// heap space ([u8; KERNEL_HEAP_SIZE])
 static mut HEAP_SPACE: [u8; KERNEL_HEAP_SIZE] = [0; KERNEL_HEAP_SIZE];
