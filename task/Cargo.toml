@@ -1,0 +1,9 @@
+[package]
+name = "task"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+riscv = { git = "https://github.com/rcore-os/riscv", features = ["inline-asm"] }
+page-table = { git = "https://github.com/binary-bruce/naive-page-table" }
+memory-set = { git = "https://github.com/binary-bruce/naive-memory-set/" }

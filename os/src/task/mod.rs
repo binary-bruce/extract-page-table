@@ -16,12 +16,10 @@ mod task;
 use crate::loader::{get_app_data, get_num_app};
 use crate::sbi::shutdown;
 use crate::sync::UPSafeCell;
-use crate::trap::TrapContext;
-use ::task::{TaskContext, TaskStatus};
+use ::task::{TaskContext, TaskControlBlock, TaskStatus, TrapContext};
 use alloc::vec::Vec;
 use lazy_static::*;
 use switch::__switch;
-use task::TaskControlBlock;
 
 /// The task manager, where all the tasks are managed.
 ///
@@ -55,7 +53,7 @@ lazy_static! {
         println!("num_app = {}", num_app);
         let mut tasks: Vec<TaskControlBlock> = Vec::new();
         for i in 0..num_app {
-            tasks.push(TaskControlBlock::new(get_app_data(i), i));
+            tasks.push(task::new(get_app_data(i), i));
         }
         TaskManager {
             num_app,
