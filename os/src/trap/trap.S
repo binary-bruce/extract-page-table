@@ -2,13 +2,16 @@
 .macro SAVE_GP n
     sd x\n, \n*8(sp)
 .endm
+
 .macro LOAD_GP n
     ld x\n, \n*8(sp)
 .endm
+
     .section .text.trampoline
     .globl __alltraps
     .globl __restore
     .align 2
+
 __alltraps:
     csrrw sp, sscratch, sp
     # now sp->*TrapContext in user space, sscratch->user stack

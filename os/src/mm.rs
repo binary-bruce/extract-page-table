@@ -24,7 +24,12 @@ pub fn init() {
         fn ekernel();
     }
 
+    // init heap so that dynamic memory allocation(e.g. Vec) is activated
     heap_allocator::init_heap(unsafe { HEAP_SPACE.as_ptr() } as usize, KERNEL_HEAP_SIZE);
+
+    // manage physical memory frames for page table and application data
     page_table::init_frame_allocator(ekernel as usize, MEMORY_END);
+
+    // enable virtual memory
     KERNEL_SPACE.exclusive_access().activate();
 }
