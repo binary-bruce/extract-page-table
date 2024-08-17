@@ -75,28 +75,33 @@ impl TaskManager {
         let mut inner = self.inner.exclusive_access();
         let next_task = &mut inner.tasks[0];
         next_task.task_status = TaskStatus::Running;
-        let next_task_cx_ptr = &next_task.task_cx as *const TaskContext;
+
+        let next_task_cx = &next_task.task_cx as *const TaskContext;
+
         drop(inner);
         let mut _unused = TaskContext::zero_init();
+
         // before this, we should drop local variables that must be dropped manually
         unsafe {
-            __switch(&mut _unused as *mut _, next_task_cx_ptr);
+            __switch(&mut _unused as *mut _, next_task_cx);
         }
         panic!("unreachable in run_first_task!");
     }
 
     /// Change the status of current `Running` task into `Ready`.
     fn mark_current_suspended(&self) {
-        let mut inner = self.inner.exclusive_access();
-        let cur = inner.current_task;
-        inner.tasks[cur].task_status = TaskStatus::Ready;
+        self.update_current_status(TaskStatus::Ready);
     }
 
     /// Change the status of current `Running` task into `Exited`.
     fn mark_current_exited(&self) {
+        self.update_current_status(TaskStatus::Exited);
+    }
+
+    fn update_current_status(&self, status: TaskStatus) {
         let mut inner = self.inner.exclusive_access();
         let cur = inner.current_task;
-        inner.tasks[cur].task_status = TaskStatus::Exited;
+        inner.tasks[cur].task_status = status;
     }
 
     /// Find next task to run and return task id.
@@ -137,12 +142,16 @@ impl TaskManager {
             let current = inner.current_task;
             inner.tasks[next].task_status = TaskStatus::Running;
             inner.current_task = next;
-            let current_task_cx_ptr = &mut inner.tasks[current].task_cx as *mut TaskContext;
-            let next_task_cx_ptr = &inner.tasks[next].task_cx as *const TaskContext;
+
+            let current_task_cx = &mut inner.tasks[current].task_cx as *mut TaskContext;
+            let next_task_cx = &inner.tasks[next].task_cx as *const TaskContext;
+
             drop(inner);
+
             // before this, we should drop local variables that must be dropped manually
             unsafe {
-                __switch(current_task_cx_ptr, next_task_cx_ptr);
+                __switch(current_task_cx, next_task_cx);
+                // after returning, the program is executing in a different task context
             }
             // go back to user mode
         } else {
