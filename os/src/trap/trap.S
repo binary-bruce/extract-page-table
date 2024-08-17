@@ -13,6 +13,7 @@
     .align 2
 
 __alltraps:
+    # see __restore: `csrw sscratch, a0` which put kernel stack value(beginning of trap context) to sscratch
     csrrw sp, sscratch, sp
     # now sp->*TrapContext in user space, sscratch->user stack
     # save other general purpose registers
