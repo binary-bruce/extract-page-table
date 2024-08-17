@@ -10,7 +10,8 @@ use task::TaskContext;
 core::arch::global_asm!(include_str!("switch.S"));
 
 extern "C" {
-    /// Switch to the context of `next_task_cx_ptr`, saving the current context
-    /// in `current_task_cx_ptr`.
-    pub fn __switch(current_task_cx_ptr: *mut TaskContext, next_task_cx_ptr: *const TaskContext);
+    /// same with normal function call, except:
+    /// 1. the stack(kernel) get changed
+    /// 2. return based on `ra` value stored in the context of the next task
+    pub fn __switch(current_task_cx: *mut TaskContext, next_task_cx: *const TaskContext);
 }
