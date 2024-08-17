@@ -52,22 +52,37 @@ fn clear_bss() {
         fn sbss();
         fn ebss();
     }
+
     unsafe {
-        core::slice::from_raw_parts_mut(sbss as usize as *mut u8, ebss as usize - sbss as usize)
-            .fill(0);
+        let data = sbss as usize as *mut u8;
+        let len = ebss as usize - sbss as usize;
+        core::slice::from_raw_parts_mut(data, len).fill(0);
     }
 }
 
 #[no_mangle]
 /// the rust entry-point of os
 pub fn rust_main() -> ! {
+    println!("[kernel] clear_bss");
     clear_bss();
+
     println!("[kernel] Hello, world!");
+
+    println!("[kernel] mm::init");
     mm::init();
+
+    println!("[kernel] trap::init");
     trap::init();
+
+    println!("[kernel] trap::enable_timer_interrupt");
     //trap::enable_interrupt();
     trap::enable_timer_interrupt();
+
+    println!("[kernel] timer::set_next_trigger");
     timer::set_next_trigger();
+
+    println!("[kernel] task::run_first_task");
     task::run_first_task();
+
     panic!("Unreachable in rust_main!");
 }

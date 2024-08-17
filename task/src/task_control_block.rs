@@ -31,6 +31,7 @@ impl TaskControlBlock {
         if new_brk < self.heap_bottom as isize {
             return None;
         }
+
         let result = if size < 0 {
             self.memory_set
                 .shrink_to(VirtAddr(self.heap_bottom), VirtAddr(new_brk as usize))
@@ -38,6 +39,7 @@ impl TaskControlBlock {
             self.memory_set
                 .append_to(VirtAddr(self.heap_bottom), VirtAddr(new_brk as usize))
         };
+
         if result {
             self.program_brk = new_brk as usize;
             Some(old_break)

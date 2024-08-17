@@ -2,14 +2,22 @@
 .macro SAVE_GP n
     sd x\n, \n*8(sp)
 .endm
+
 .macro LOAD_GP n
     ld x\n, \n*8(sp)
 .endm
+
     .section .text.trampoline
     .globl __alltraps
     .globl __restore
     .align 2
+
+# 1. point sp to trap context(original user stack is saved in sscratch) -> for step 2
+# 2. save register values(including user stack) to trap context
+# 3. switch to kernel stack and kernel memory space(stored data in trap context)
+# 4. call trap_handler
 __alltraps:
+    # see __restore: `csrw sscratch, a0` which put kernel stack value(beginning of trap context) to sscratch
     csrrw sp, sscratch, sp
     # now sp->*TrapContext in user space, sscratch->user stack
     # save other general purpose registers
@@ -43,6 +51,12 @@ __alltraps:
     # jump to trap_handler
     jr t1
 
+# __restore(trap_context: *TrapContext, user_token: usize)
+# 1. switch to user space(but still in supervisor mode)
+# 2. point sp to trap context
+# 3. restore register values in trap context
+# 4. restore sp to user stack
+# 5. sret
 __restore:
     # a0: *TrapContext in user space(Constant); a1: user space token
     # switch to user space
